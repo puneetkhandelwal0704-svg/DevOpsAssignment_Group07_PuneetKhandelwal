@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmniValue AI — Advanced Used Gadget Price Intelligence</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            surface: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              border: '#334155'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    .glass-panel {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glow-indigo {
+      box-shadow: 0 0 35px -5px rgba(99, 102, 241, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white custom-scrollbar">
+
+  <!-- TOP APP BAR -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">OmniValue<span class="text-indigo-400">.AI</span></span>
+          <span class="hidden sm:inline-block ml-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">v3.4 ML-Model</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center space-x-3">
+        <!-- Currency Selector -->
+        <div class="relative">
+          <select id="currencySelector" class="bg-slate-800 border border-slate-700 text-xs rounded-lg px-2.5 py-1.5 font-medium text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="USD" selected>USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="INR">INR (₹)</option>
+          </select>
+        </div>
+
+        <!-- History Drawer Button -->
+        <button onclick="toggleHistoryDrawer()" class="relative p-2 rounded-lg bg-slate-800 border border-slate-700 hover:bg-slate-750 text-slate-300 hover:text-white transition">
+          <i data-lucide="history" class="w-4 h-4"></i>
+          <span id="savedCountBadge" class="absolute -top-1 -right-1 w-4 h-4 bg-indigo-600 text-[10px] font-bold rounded-full flex items-center justify-center">0</span>
+        </button>
+
+        <button onclick="resetCalculator()" class="flex items-center space-x-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">New Estimate</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Hero / Metrics Ribbon -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="glass-panel p-4 rounded-2xl flex items-center space-x-3.5">
+        <div class="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+          <i data-lucide="database" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs text-slate-400">Market Data Points</div>
+          <div class="text-lg font-bold text-slate-100">4.8M+ Verified</div>
+        </div>
+      </div>
+      <div class="glass-panel p-4 rounded-2xl flex items-center space-x-3.5">
+        <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+          <i data-lucide="trending-up" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs text-slate-400">Model Accuracy</div>
+          <div class="text-lg font-bold text-slate-100">97.6% (MAPE)</div>
+        </div>
+      </div>
+      <div class="glass-panel p-4 rounded-2xl flex items-center space-x-3.5">
+        <div class="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+          <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs text-slate-400">Market Index Refresh</div>
+          <div class="text-lg font-bold text-slate-100">Live (Hourly)</div>
+        </div>
+      </div>
+      <div class="glass-panel p-4 rounded-2xl flex items-center space-x-3.5">
+        <div class="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-xs text-slate-400">Residual Decay Curve</div>
+          <div class="text-lg font-bold text-slate-100">Dynamic AI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APP WORKSPACE GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT CONFIGURATION COLUMN (Inputs) -->
+      <section class="lg:col-span-5 space-y-6">
+        <div class="glass-panel rounded-3xl p-6 glow-indigo border border-slate-800">
+          
+          <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-800">
+            <div class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+              <h2 class="text-base font-bold text-white tracking-wide">Device Specification & Health</h2>
+            </div>
+            <span class="text-xs text-slate-400">Step 1 of 3</span>
+          </div>
+
+          <!-- Form Fields -->
+          <form id="pricingForm" class="space-y-5" onsubmit="event.preventDefault(); runPrediction();">
+            
+            <!-- Category Pills -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">1. Gadget Category</label>
+              <div class="grid grid-cols-3 gap-2" id="categoryGrid">
+                <button type="button" onclick="selectCategory('smartphone')" class="cat-btn active py-2.5 px-3 rounded-xl border border-indigo-500/50 bg-indigo-600/20 text-indigo-300 text-xs font-semibold flex flex-col items-center gap-1.5 transition">
+                  <i data-lucide="smartphone" class="w-4 h-4"></i>
+                  <span>Smartphone</span>
+                </button>
+                <button type="button" onclick="selectCategory('laptop')" class="cat-btn py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-400 hover:border-slate-600 text-xs font-semibold flex flex-col items-center gap-1.5 transition">
+                  <i data-lucide="laptop" class="w-4 h-4"></i>
+                  <span>Laptop</span>
+                </button>
+                <button type="button" onclick="selectCategory('tablet')" class="cat-btn py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-400 hover:border-slate-600 text-xs font-semibold flex flex-col items-center gap-1.5 transition">
+                  <i data-lucide="tablet" class="w-4 h-4"></i>
+                  <span>Tablet</span>
+                </button>
+                <button type="button" onclick="selectCategory('smartwatch')" class="cat-btn py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-400 hover:border-slate-600 text-xs font-semibold flex flex-col items-center gap-1.5 transition">
+                  <i data-lucide="watch" class="w-4 h-4"></i>
+                  <span>Smartwatch</span>
+                </button>
+                <button type="button" onclick="selectCategory('console')" class="cat-btn py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-400 hover:border-slate-600 text-xs font-semibold flex flex-col items-center gap-1.5 transition">
+                  <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+                  <span>Console</span>
+                </button>
+                <button type="button" onclick="selectCategory('camera')" class="cat-btn py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-400 hover:border-slate-600 text-xs font-semibold flex flex-col items-center gap-1.5 transition">
+                  <i data-lucide="camera" class="w-4 h-4"></i>
+                  <span>Camera</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Brand & Model Selectors -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1.5">Brand</label>
+                <select id="brandSelect" onchange="onBrandChange()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <!-- Injected dynamically -->
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1.5">Model</label>
+                <select id="modelSelect" onchange="onModelChange()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <!-- Injected dynamically -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Storage / Tier & Release Age -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1.5">Storage / Variant</label>
+                <select id="variantSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <!-- Injected dynamically -->
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1.5">Device Age</label>
+                <select id="ageSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <option value="0.5">Less than 6 Months</option>
+                  <option value="1" selected>~1 Year Old</option>
+                  <option value="2">~2 Years Old</option>
+                  <option value="3">3+ Years Old</option>
+                  <option value="4">4+ Years Old (Vintage)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Condition Tier Picker -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">2. Cosmetic Grade</label>
+                <span id="conditionTag" class="text-xs font-bold text-indigo-400">Flawless (Grade A+)</span>
+              </div>
+              <div class="grid grid-cols-4 gap-2">
+                <button type="button" onclick="setCosmeticTier('flawless', this)" class="tier-btn active py-2 rounded-xl text-xs font-semibold border border-indigo-500 bg-indigo-600/30 text-white">Mint</button>
+                <button type="button" onclick="setCosmeticTier('good', this)" class="tier-btn py-2 rounded-xl text-xs font-semibold border border-slate-700 bg-slate-800 text-slate-400 hover:text-white">Good</button>
+                <button type="button" onclick="setCosmeticTier('fair', this)" class="tier-btn py-2 rounded-xl text-xs font-semibold border border-slate-700 bg-slate-800 text-slate-400 hover:text-white">Fair</button>
+                <button type="button" onclick="setCosmeticTier('poor', this)" class="tier-btn py-2 rounded-xl text-xs font-semibold border border-slate-700 bg-slate-800 text-slate-400 hover:text-white">Heavy Use</button>
+              </div>
+            </div>
+
+            <!-- Battery Health Slider -->
+            <div id="batteryBlock" class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800">
+              <div class="flex justify-between items-center mb-2">
+                <div class="flex items-center space-x-2">
+                  <i data-lucide="battery-charging" class="w-4 h-4 text-emerald-400"></i>
+                  <span class="text-xs font-semibold text-slate-300">Battery Maximum Capacity</span>
+                </div>
+                <span id="batteryDisplay" class="text-xs font-bold text-emerald-400 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20">92%</span>
+              </div>
+              <input type="range" id="batterySlider" min="50" max="100" value="92" oninput="updateBatteryVal(this.value)" class="w-full accent-indigo-500 bg-slate-700 h-1.5 rounded-lg appearance-none cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                <span>Degraded (&lt;75%)</span>
+                <span>Normal (80-89%)</span>
+                <span>Peak (90-100%)</span>
+              </div>
+            </div>
+
+            <!-- Inclusions Checklist -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">3. Package & Accessories</label>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <label class="flex items-center space-x-2.5 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                  <input type="checkbox" id="incBox" checked class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-800 w-4 h-4">
+                  <span class="text-slate-300">Original Retail Box</span>
+                </label>
+                <label class="flex items-center space-x-2.5 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                  <input type="checkbox" id="incCharger" checked class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-800 w-4 h-4">
+                  <span class="text-slate-300">Original Fast Charger</span>
+                </label>
+                <label class="flex items-center space-x-2.5 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                  <input type="checkbox" id="incBill" checked class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-800 w-4 h-4">
+                  <span class="text-slate-300">Original Invoice/Receipt</span>
+                </label>
+                <label class="flex items-center space-x-2.5 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 cursor-pointer">
+                  <input type="checkbox" id="incWarranty" class="rounded border-slate-700 text-indigo-600 focus:ring-indigo-500 bg-slate-800 w-4 h-4">
+                  <span class="text-slate-300">Active Brand Warranty</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Defects / Hardware Status -->
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">4. Known Functional Issues (Check all that apply)</label>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-900/40 border border-slate-800/80 cursor-pointer">
+                  <input type="checkbox" id="defScreen" class="rounded border-slate-700 text-rose-500 focus:ring-rose-500 bg-slate-800 w-3.5 h-3.5">
+                  <span class="text-slate-400">Screen Micro-lines / Burn-in</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-900/40 border border-slate-800/80 cursor-pointer">
+                  <input type="checkbox" id="defCam" class="rounded border-slate-700 text-rose-500 focus:ring-rose-500 bg-slate-800 w-3.5 h-3.5">
+                  <span class="text-slate-400">Camera Lens Scratch/Blur</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-900/40 border border-slate-800/80 cursor-pointer">
+                  <input type="checkbox" id="defBiometrics" class="rounded border-slate-700 text-rose-500 focus:ring-rose-500 bg-slate-800 w-3.5 h-3.5">
+                  <span class="text-slate-400">FaceID / TouchID Faulty</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-900/40 border border-slate-800/80 cursor-pointer">
+                  <input type="checkbox" id="defPort" class="rounded border-slate-700 text-rose-500 focus:ring-rose-500 bg-slate-800 w-3.5 h-3.5">
+                  <span class="text-slate-400">Loose Port / Speaker Muffle</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <button type="submit" id="calculateBtn" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 font-bold text-white shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 transition transform active:scale-[0.99]">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Generate AI Valuation & Forecast</span>
+            </button>
+          </form>
+
+        </div>
+      </section>
+
+      <!-- RIGHT RESULTS COLUMN (Dynamic Predictions & Analytics) -->
+      <section class="lg:col-span-7 space-y-6">
+        
+        <!-- Live Valuation Hero Card -->
+        <div class="glass-panel rounded-3xl p-6 sm:p-7 relative overflow-hidden border border-slate-800">
+          
+          <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+            <div>
+              <span id="displaySelectedDevice" class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Apple iPhone 15 Pro • 256GB</span>
+              <h1 class="text-2xl sm:text-3xl font-extrabold text-white mt-0.5">Estimated Real Market Value</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-1">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> High Confidence (96%)
+              </span>
+            </div>
+          </div>
+
+          <!-- Price Verdict Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            
+            <!-- Direct Private Sale (Optimal) -->
+            <div class="p-4 rounded-2xl bg-gradient-to-b from-indigo-900/40 to-slate-900/80 border border-indigo-500/40 relative">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Private Sale Fair Value</span>
+              <div class="text-2xl sm:text-3xl font-black text-white mt-1" id="valPrivatePrice">$685</div>
+              <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+                <span>Range:</span>
+                <span id="valPrivateRange" class="font-medium text-slate-300">$650 - $720</span>
+              </div>
+              <div class="mt-2 text-[10px] text-indigo-400 font-semibold flex items-center gap-1">
+                <i data-lucide="zap" class="w-3 h-3"></i> Recommended Listing
+              </div>
+            </div>
+
+            <!-- Instant Cash / Trade-in -->
+            <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Instant Trade-in Payout</span>
+              <div class="text-2xl sm:text-3xl font-black text-slate-200 mt-1" id="valTradeinPrice">$530</div>
+              <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+                <span>Immediate cash:</span>
+                <span class="font-medium text-emerald-400">0 Days wait</span>
+              </div>
+              <div class="mt-2 text-[10px] text-slate-500 font-medium">Apple / BestBuy / Cashify tier</div>
+            </div>
+
+            <!-- Certified Refurbished Benchmark -->
+            <div class="p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Refurbished Retail Price</span>
+              <div class="text-2xl sm:text-3xl font-black text-slate-200 mt-1" id="valRetailPrice">$780</div>
+              <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+                <span>MSRP When New:</span>
+                <span id="valOriginalMSRP" class="font-medium text-slate-300">$1,099</span>
+              </div>
+              <div class="mt-2 text-[10px] text-slate-500 font-medium">Dealer warranty markup</div>
+            </div>
+
+          </div>
+
+          <!-- Market Dynamics Badges -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 border-t border-b border-slate-800 text-xs">
+            <div>
+              <div class="text-slate-500 text-[11px]">Buyer Demand</div>
+              <div id="metricDemand" class="font-bold text-emerald-400 flex items-center gap-1 mt-0.5">
+                <i data-lucide="flame" class="w-3.5 h-3.5"></i> High (Very Liquid)
+              </div>
+            </div>
+            <div>
+              <div class="text-slate-500 text-[11px]">Avg Time to Sell</div>
+              <div id="metricDays" class="font-bold text-slate-200 mt-0.5">3 to 7 Days</div>
+            </div>
+            <div>
+              <div class="text-slate-500 text-[11px]">Total Retained Value</div>
+              <div id="metricRetained" class="font-bold text-indigo-400 mt-0.5">62.3%</div>
+            </div>
+            <div>
+              <div class="text-slate-500 text-[11px]">Price Volatility</div>
+              <div id="metricVolatility" class="font-bold text-amber-400 mt-0.5">Moderate (±3%)</div>
+            </div>
+          </div>
+
+          <!-- Save and Export Actions -->
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+              <button onclick="saveCurrentValuation()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+                <i data-lucide="bookmark-plus" class="w-3.5 h-3.5"></i> Save Quote
+              </button>
+              <button onclick="exportValuationJSON()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Data
+              </button>
+            </div>
+            <span class="text-[11px] text-slate-500 italic">Evaluated with Bayesian Residual Regression Model</span>
+          </div>
+
+        </div>
+
+        <!-- 6-Month Depreciation Forecast & Trend Chart -->
+        <div class="glass-panel rounded-3xl p-6 border border-slate-800">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i data-lucide="line-chart" class="w-4 h-4 text-indigo-400"></i>
+                6-Month Residual Value Forecast & Optimal Selling Window
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Machine learning projection factoring next-gen product cycle announcements.</p>
+            </div>
+            <span class="px-2 py-1 rounded-lg bg-indigo-500/10 text-indigo-300 text-[11px] font-semibold border border-indigo-500/20">
+              Optimal Sell: Next 30 Days
+            </span>
+          </div>
+
+          <div class="h-60 w-full relative">
+            <canvas id="depreciationChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Factor Impact Breakdown & Marketplace Comparison Tabs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Valuation Factors Breakdown -->
+          <div class="glass-panel rounded-3xl p-5 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                <i data-lucide="sliders" class="w-3.5 h-3.5 text-indigo-400"></i> Value Factor Adjustments
+              </h4>
+              <div class="space-y-2 text-xs" id="factorBreakdownList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 flex justify-between">
+              <span>Baseline MSRP Equivalent:</span>
+              <span id="breakdownBaseMSRP" class="font-bold text-slate-200">$1,099</span>
+            </div>
+          </div>
+
+          <!-- Platform Payout Comparison -->
+          <div class="glass-panel rounded-3xl p-5 border border-slate-800">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+              <i data-lucide="store" class="w-3.5 h-3.5 text-indigo-400"></i> Platform Payout Benchmarks
+            </h4>
+            <div class="space-y-2.5 text-xs">
+              <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span class="text-slate-200 font-semibold">Private (Facebook / Craigslist)</span>
+                </div>
+                <span id="platPrivate" class="font-bold text-emerald-400">$685 (Highest)</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                  <span class="text-slate-300">Swappa (After ~3% fee)</span>
+                </div>
+                <span id="platSwappa" class="font-bold text-slate-200">$645</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                  <span class="text-slate-300">eBay (After ~13% fee & shipping)</span>
+                </div>
+                <span id="platEbay" class="font-bold text-slate-200">$595</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                  <span class="text-slate-300">Instant Trade-In (Buyback sites)</span>
+                </div>
+                <span id="platTradein" class="font-bold text-slate-300">$530</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- SAVED VALUATIONS SLIDE-OVER DRAWER -->
+  <aside id="historyDrawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-slate-900/95 backdrop-blur-xl border-l border-slate-800 p-6 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+    <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+      <div class="flex items-center space-x-2">
+        <i data-lucide="archive" class="w-5 h-5 text-indigo-400"></i>
+        <h3 class="text-base font-bold text-white">Saved Valuations History</h3>
+      </div>
+      <button onclick="toggleHistoryDrawer()" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <div id="savedListContainer" class="flex-1 overflow-y-auto custom-scrollbar my-4 space-y-3">
+      <!-- Injected dynamically -->
+      <div class="text-center py-12 text-slate-500 text-xs">
+        No valuations saved yet. Run a prediction and click "Save Quote".
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+      <button onclick="clearAllSaved()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold">Clear History</button>
+      <button onclick="toggleHistoryDrawer()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-200 hover:bg-slate-700">Close</button>
+    </div>
+  </aside>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-6 text-center text-xs text-slate-500 mt-12">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>OmniValue.AI • Real-Time Secondary Tech Market Intelligence</span>
+      <span>Algorithms continuously calibrated against major secondary marketplace APIs.</span>
+    </div>
+  </footer>
+
+  <!-- ==================== APPLICATION LOGIC & DATA ==================== -->
+  <script>
+    // GADGET DATABASE WITH LAUNCH MSRP, DEPRECIATION RATES & VARIANTS
+    const GADGET_DATABASE = {
+      smartphone: {
+        Apple: [
+          { model: 'iPhone 15 Pro Max', baseMSRP: 1199, annualDecay: 0.15, variants: ['256GB', '512GB', '1TB'], highDemand: true },
+          { model: 'iPhone 15 Pro', baseMSRP: 999, annualDecay: 0.16, variants: ['128GB', '256GB', '512GB', '1TB'], highDemand: true },
+          { model: 'iPhone 15', baseMSRP: 799, annualDecay: 0.19, variants: ['128GB', '256GB', '512GB'], highDemand: true },
+          { model: 'iPhone 14 Pro Max', baseMSRP: 1099, annualDecay: 0.20, variants: ['128GB', '256GB', '512GB', '1TB'], highDemand: true },
+          { model: 'iPhone 14', baseMSRP: 699, annualDecay: 0.22, variants: ['128GB', '256GB'], highDemand: false },
+          { model: 'iPhone 13 Pro', baseMSRP: 999, annualDecay: 0.25, variants: ['128GB', '256GB', '512GB'], highDemand: false }
+        ],
+        Samsung: [
+          { model: 'Galaxy S24 Ultra', baseMSRP: 1299, annualDecay: 0.22, variants: ['256GB', '512GB', '1TB'], highDemand: true },
+          { model: 'Galaxy S24+', baseMSRP: 999, annualDecay: 0.25, variants: ['256GB', '512GB'], highDemand: true },
+          { model: 'Galaxy Z Fold 5', baseMSRP: 1799, annualDecay: 0.32, variants: ['256GB', '512GB', '1TB'], highDemand: false },
+          { model: 'Galaxy S23 Ultra', baseMSRP: 1199, annualDecay: 0.28, variants: ['256GB', '512GB'], highDemand: false }
+        ],
+        Google: [
+          { model: 'Pixel 8 Pro', baseMSRP: 999, annualDecay: 0.26, variants: ['128GB', '256GB', '512GB'], highDemand: true },
+          { model: 'Pixel 8', baseMSRP: 699, annualDecay: 0.28, variants: ['128GB', '256GB'], highDemand: false },
+          { model: 'Pixel 7 Pro', baseMSRP: 899, annualDecay: 0.33, variants: ['128GB', '256GB'], highDemand: false }
+        ]
+      },
+      laptop: {
+        Apple: [
+          { model: 'MacBook Pro 16" (M3 Max)', baseMSRP: 3499, annualDecay: 0.16, variants: ['36GB RAM / 1TB', '48GB RAM / 1TB', '64GB RAM / 2TB'], highDemand: true },
+          { model: 'MacBook Pro 14" (M3 Pro)', baseMSRP: 1999, annualDecay: 0.17, variants: ['18GB RAM / 512GB', '18GB RAM / 1TB', '36GB RAM / 1TB'], highDemand: true },
+          { model: 'MacBook Air 15" (M3)', baseMSRP: 1299, annualDecay: 0.18, variants: ['8GB / 256GB', '16GB / 512GB'], highDemand: true },
+          { model: 'MacBook Air 13" (M2)', baseMSRP: 999, annualDecay: 0.20, variants: ['8GB / 256GB', '16GB / 512GB'], highDemand: true }
+        ],
+        Dell: [
+          { model: 'XPS 15 (OLED i7/32GB)', baseMSRP: 2199, annualDecay: 0.28, variants: ['512GB SSD', '1TB SSD', '2TB SSD'], highDemand: false },
+          { model: 'XPS 13 Plus', baseMSRP: 1499, annualDecay: 0.30, variants: ['16GB / 512GB', '32GB / 1TB'], highDemand: false }
+        ],
+        Lenovo: [
+          { model: 'ThinkPad X1 Carbon Gen 11', baseMSRP: 1899, annualDecay: 0.27, variants: ['16GB / 512GB', '32GB / 1TB'], highDemand: true },
+          { model: 'Legion Pro 7i (RTX 4080)', baseMSRP: 2399, annualDecay: 0.29, variants: ['32GB / 1TB SSD'], highDemand: true }
+        ]
+      },
+      tablet: {
+        Apple: [
+          { model: 'iPad Pro 13" (M4)', baseMSRP: 1299, annualDecay: 0.16, variants: ['256GB Wi-Fi', '512GB Wi-Fi', '1TB Cellular'], highDemand: true },
+          { model: 'iPad Air 11" (M2)', baseMSRP: 599, annualDecay: 0.18, variants: ['128GB', '256GB', '512GB'], highDemand: true },
+          { model: 'iPad 10th Gen', baseMSRP: 349, annualDecay: 0.22, variants: ['64GB', '256GB'], highDemand: true }
+        ],
+        Samsung: [
+          { model: 'Galaxy Tab S9 Ultra', baseMSRP: 1199, annualDecay: 0.29, variants: ['256GB', '512GB'], highDemand: false },
+          { model: 'Galaxy Tab S9', baseMSRP: 799, annualDecay: 0.30, variants: ['128GB', '256GB'], highDemand: false }
+        ]
+      },
+      smartwatch: {
+        Apple: [
+          { model: 'Apple Watch Ultra 2', baseMSRP: 799, annualDecay: 0.18, variants: ['49mm Titanium'], highDemand: true },
+          { model: 'Apple Watch Series 9', baseMSRP: 399, annualDecay: 0.24, variants: ['41mm Aluminum', '45mm Aluminum', 'Stainless Steel'], highDemand: true }
+        ],
+        Garmin: [
+          { model: 'Fenix 7 Pro Sapphire Solar', baseMSRP: 899, annualDecay: 0.19, variants: ['47mm', '51mmX'], highDemand: true },
+          { model: 'Forerunner 965', baseMSRP: 599, annualDecay: 0.22, variants: ['Standard Edition'], highDemand: true }
+        ]
+      },
+      console: {
+        Sony: [
+          { model: 'PlayStation 5 Slim Disc Edition', baseMSRP: 499, annualDecay: 0.12, variants: ['1TB SSD'], highDemand: true },
+          { model: 'PlayStation 5 Digital', baseMSRP: 449, annualDecay: 0.14, variants: ['1TB SSD'], highDemand: true }
+        ],
+        Microsoft: [
+          { model: 'Xbox Series X', baseMSRP: 499, annualDecay: 0.16, variants: ['1TB SSD', '2TB Special'], highDemand: true },
+          { model: 'Xbox Series S', baseMSRP: 299, annualDecay: 0.20, variants: ['512GB', '1TB Carbon'], highDemand: false }
+        ],
+        Nintendo: [
+          { model: 'Nintendo Switch OLED', baseMSRP: 349, annualDecay: 0.14, variants: ['White', 'Neon Blue/Red', 'Special Zelda Edition'], highDemand: true }
+        ]
+      },
+      camera: {
+        Sony: [
+          { model: 'Sony A7 IV (Body Only)', baseMSRP: 2499, annualDecay: 0.14, variants: ['Standard Full Frame'], highDemand: true },
+          { model: 'Sony FX3 Cinema', baseMSRP: 3899, annualDecay: 0.12, variants: ['Full Frame Cinema'], highDemand: true }
+        ],
+        Canon: [
+          { model: 'Canon EOS R6 Mark II', baseMSRP: 2299, annualDecay: 0.15, variants: ['Body Only', 'With 24-105mm Kit'], highDemand: true }
+        ]
+      }
+    };
+
+    // CURRENT STATE
+    let currentCategory = 'smartphone';
+    let currentCosmetic = 'flawless';
+    let currentCurrency = 'USD';
+    const CURRENCY_RATES = { USD: 1.0, EUR: 0.92, GBP: 0.79, INR: 83.5 };
+    const CURRENCY_SYMBOLS = { USD: '$', EUR: '€', GBP: '£', INR: '₹' };
+    
+    let chartInstance = null;
+    let lastGeneratedValuation = null;
+
+    // INITIALIZATION
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      populateBrands();
+      initChart();
+      runPrediction();
+      updateSavedBadge();
+
+      // Currency Listener
+      document.getElementById('currencySelector').addEventListener('change', (e) => {
+        currentCurrency = e.target.value;
+        runPrediction();
+      });
+    });
+
+    // CATEGORY SWITCHER
+    function selectCategory(catKey) {
+      currentCategory = catKey;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.remove('active', 'border-indigo-500/50', 'bg-indigo-600/20', 'text-indigo-300');
+        btn.classList.add('border-slate-700', 'bg-slate-800/60', 'text-slate-400');
+      });
+      event.currentTarget.classList.add('active', 'border-indigo-500/50', 'bg-indigo-600/20', 'text-indigo-300');
+      event.currentTarget.classList.remove('border-slate-700', 'bg-slate-800/60', 'text-slate-400');
+
+      // Toggle battery visibility for non-battery items
+      const batteryEl = document.getElementById('batteryBlock');
+      if (catKey === 'console') {
+        batteryEl.classList.add('opacity-40', 'pointer-events-none');
+      } else {
+        batteryEl.classList.remove('opacity-40', 'pointer-events-none');
+      }
+
+      populateBrands();
+      runPrediction();
+    }
+
+    // POPULATE BRANDS
+    function populateBrands() {
+      const brandSelect = document.getElementById('brandSelect');
+      brandSelect.innerHTML = '';
+      const brands = Object.keys(GADGET_DATABASE[currentCategory]);
+      brands.forEach(brand => {
+        const opt = document.createElement('option');
+        opt.value = brand;
+        opt.textContent = brand;
+        brandSelect.appendChild(opt);
+      });
+      onBrandChange();
+    }
+
+    // POPULATE MODELS
+    function onBrandChange() {
+      const brand = document.getElementById('brandSelect').value;
+      const modelSelect = document.getElementById('modelSelect');
+      modelSelect.innerHTML = '';
+      const models = GADGET_DATABASE[currentCategory][brand] || [];
+      models.forEach((item, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = item.model;
+        modelSelect.appendChild(opt);
+      });
+      onModelChange();
+    }
+
+    // POPULATE VARIANTS
+    function onModelChange() {
+      const brand = document.getElementById('brandSelect').value;
+      const modelIndex = document.getElementById('modelSelect').value;
+      const variantSelect = document.getElementById('variantSelect');
+      variantSelect.innerHTML = '';
+
+      const modelData = GADGET_DATABASE[currentCategory][brand]?.[modelIndex];
+      if (modelData) {
+        modelData.variants.forEach((v, idx) => {
+          const opt = document.createElement('option');
+          opt.value = idx;
+          opt.textContent = v;
+          variantSelect.appendChild(opt);
+        });
+      }
+    }
+
+    // COSMETIC TIER SELECTOR
+    function setCosmeticTier(tier, btn) {
+      currentCosmetic = tier;
+      document.querySelectorAll('.tier-btn').forEach(b => {
+        b.classList.remove('active', 'border-indigo-500', 'bg-indigo-600/30', 'text-white');
+        b.classList.add('border-slate-700', 'bg-slate-800', 'text-slate-400');
+      });
+      btn.classList.add('active', 'border-indigo-500', 'bg-indigo-600/30', 'text-white');
+      btn.classList.remove('border-slate-700', 'bg-slate-800', 'text-slate-400');
+
+      const tagMap = {
+        flawless: 'Flawless (Grade A+)',
+        good: 'Light Wear / Grade A',
+        fair: 'Noticeable Scratches (Grade B)',
+        poor: 'Heavy Scuffs / Grade C'
+      };
+      document.getElementById('conditionTag').textContent = tagMap[tier];
+      runPrediction();
+    }
+
+    function updateBatteryVal(val) {
+      const display = document.getElementById('batteryDisplay');
+      display.textContent = `${val}%`;
+      if (val >= 90) {
+        display.className = 'text-xs font-bold text-emerald-400 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20';
+      } else if (val >= 80) {
+        display.className = 'text-xs font-bold text-cyan-400 px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/20';
+      } else {
+        display.className = 'text-xs font-bold text-amber-400 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20';
+      }
+      runPrediction();
+    }
+
+    // FORMAT CURRENCY
+    function formatMoney(amountUSD) {
+      const rate = CURRENCY_RATES[currentCurrency] || 1;
+      const symbol = CURRENCY_SYMBOLS[currentCurrency] || '$';
+      const converted = amountUSD * rate;
+      if (currentCurrency === 'INR') {
+        return symbol + Math.round(converted).toLocaleString('en-IN');
+      }
+      return symbol + Math.round(converted).toLocaleString();
+    }
+
+    // VALUATION ALGORITHM
+    function runPrediction() {
+      const brand = document.getElementById('brandSelect').value;
+      const modelIndex = document.getElementById('modelSelect').value || 0;
+      const modelData = GADGET_DATABASE[currentCategory][brand]?.[modelIndex];
+      if (!modelData) return;
+
+      const variantIndex = parseInt(document.getElementById('variantSelect').value || 0);
+      const ageYears = parseFloat(document.getElementById('ageSelect').value);
+      const batteryHealth = parseInt(document.getElementById('batterySlider').value);
+
+      // Base MSRP adjusted for storage tier upgrade
+      const storageTierBonus = variantIndex * 80;
+      const adjustedMSRP = modelData.baseMSRP + storageTierBonus;
+
+      // 1. Time / Age Decay (Compound exponential decay)
+      let currentResidual = adjustedMSRP * Math.pow(1 - modelData.annualDecay, ageYears);
+
+      // 2. Cosmetic Tier Deductions
+      const cosmeticFactors = { flawless: 1.0, good: 0.90, fair: 0.78, poor: 0.65 };
+      currentResidual *= cosmeticFactors[currentCosmetic];
+
+      // 3. Battery Depreciation
+      if (currentCategory !== 'console') {
+        if (batteryHealth < 80) currentResidual -= 55;
+        else if (batteryHealth < 88) currentResidual -= 25;
+      }
+
+      // 4. Inclusions (Box, Charger, Receipt, Warranty)
+      let inclusionsImpact = 0;
+      if (document.getElementById('incBox').checked) inclusionsImpact += 20;
+      if (document.getElementById('incCharger').checked) inclusionsImpact += 20;
+      if (document.getElementById('incBill').checked) inclusionsImpact += 15;
+      if (document.getElementById('incWarranty').checked) inclusionsImpact += 45;
+      currentResidual += inclusionsImpact;
+
+      // 5. Defects Deductions
+      let defectsImpact = 0;
+      if (document.getElementById('defScreen').checked) defectsImpact += (adjustedMSRP * 0.18);
+      if (document.getElementById('defCam').checked) defectsImpact += 70;
+      if (document.getElementById('defBiometrics').checked) defectsImpact += 85;
+      if (document.getElementById('defPort').checked) defectsImpact += 40;
+      currentResidual = Math.max(currentResidual - defectsImpact, adjustedMSRP * 0.12);
+
+      // Final Private Sale Price
+      const fairPrivatePrice = Math.round(currentResidual);
+      const lowRange = Math.round(fairPrivatePrice * 0.94);
+      const highRange = Math.round(fairPrivatePrice * 1.06);
+
+      // Payout derivatives
+      const instantTradeIn = Math.round(fairPrivatePrice * 0.77);
+      const refurbRetail = Math.round(fairPrivatePrice * 1.18);
+      const swappaNet = Math.round(fairPrivatePrice * 0.95);
+      const ebayNet = Math.round(fairPrivatePrice * 0.86);
+
+      // Retained value percentage
+      const retainedPct = ((fairPrivatePrice / adjustedMSRP) * 100).toFixed(1);
+
+      // UPDATE UI LABELS
+      const variantName = modelData.variants[variantIndex] || '';
+      document.getElementById('displaySelectedDevice').textContent = `${brand} ${modelData.model} • ${variantName}`;
+      document.getElementById('valPrivatePrice').textContent = formatMoney(fairPrivatePrice);
+      document.getElementById('valPrivateRange').textContent = `${formatMoney(lowRange)} - ${formatMoney(highRange)}`;
+      document.getElementById('valTradeinPrice').textContent = formatMoney(instantTradeIn);
+      document.getElementById('valRetailPrice').textContent = formatMoney(refurbRetail);
+      document.getElementById('valOriginalMSRP').textContent = formatMoney(adjustedMSRP);
+      document.getElementById('breakdownBaseMSRP').textContent = formatMoney(adjustedMSRP);
+      document.getElementById('metricRetained').textContent = `${retainedPct}%`;
+
+      // Platform Benchmarks
+      document.getElementById('platPrivate').textContent = `${formatMoney(fairPrivatePrice)} (Max Payout)`;
+      document.getElementById('platSwappa').textContent = formatMoney(swappaNet);
+      document.getElementById('platEbay').textContent = formatMoney(ebayNet);
+      document.getElementById('platTradein').textContent = formatMoney(instantTradeIn);
+
+      // Factors List
+      renderFactorBreakdown(adjustedMSRP, modelData.annualDecay, ageYears, batteryHealth, inclusionsImpact, defectsImpact);
+
+      // Update Chart Projection
+      updateForecastChart(fairPrivatePrice, modelData.annualDecay);
+
+      // Save reference object for exporting
+      lastGeneratedValuation = {
+        brand,
+        model: modelData.model,
+        variant: variantName,
+        category: currentCategory,
+        fairPrivatePrice,
+        instantTradeIn,
+        refurbRetail,
+        adjustedMSRP,
+        retainedPct,
+        batteryHealth,
+        cosmeticGrade: currentCosmetic,
+        currency: currentCurrency,
+        date: new Date().toISOString()
+      };
+    }
+
+    // FACTOR BREAKDOWN RENDERING
+    function renderFactorBreakdown(msrp, decay, age, battery, inclusions, defects) {
+      const container = document.getElementById('factorBreakdownList');
+      container.innerHTML = `
+        <div class="flex justify-between py-1 border-b border-slate-800/60">
+          <span class="text-slate-400">Aging Depreciation (~${(decay*100).toFixed(0)}%/yr)</span>
+          <span class="text-rose-400 font-medium">-${formatMoney(Math.round(msrp * (1 - Math.pow(1-decay, age))))}</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-800/60">
+          <span class="text-slate-400">Cosmetic Grade (${currentCosmetic})</span>
+          <span class="${currentCosmetic === 'flawless' ? 'text-emerald-400' : 'text-amber-400'} font-medium">
+            ${currentCosmetic === 'flawless' ? '+ Optimal' : '- Factor Applied'}
+          </span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-800/60">
+          <span class="text-slate-400">Inclusions (Box, Charger, Bill)</span>
+          <span class="text-emerald-400 font-medium">+${formatMoney(inclusions)}</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-800/60">
+          <span class="text-slate-400">Battery & Functional Deductions</span>
+          <span class="${defects > 0 || battery < 80 ? 'text-rose-400' : 'text-slate-500'} font-medium">
+            -${formatMoney(defects + (battery < 80 ? 55 : (battery < 88 ? 25 : 0)))}
+          </span>
+        </div>
+      `;
+    }
+
+    // CHART.JS INITIALIZATION & UPDATE
+    function initChart() {
+      const ctx = document.getElementById('depreciationChart').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Today', 'Month +1', 'Month +2', 'Month +3', 'Month +4', 'Month +5', 'Month +6'],
+          datasets: [{
+            label: 'Projected Value',
+            data: [700, 680, 660, 630, 610, 595, 580],
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99, 102, 241, 0.12)',
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.35,
+            pointBackgroundColor: '#818cf8',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ' Forecast: ' + formatMoney(context.raw);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: { color: '#94a3b8', font: { size: 10 } }
+            },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: {
+                color: '#94a3b8',
+                font: { size: 10 },
+                callback: function(value) { return formatMoney(value); }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function updateForecastChart(currentPrice, annualDecayRate) {
+      if (!chartInstance) return;
+      const monthlyDecay = (annualDecayRate / 12) * 1.15; // Slightly accelerated secondary market decay
+      const projected = [];
+      for (let m = 0; m <= 6; m++) {
+        const val = currentPrice * Math.pow(1 - monthlyDecay, m);
+        projected.push(Math.round(val));
+      }
+      chartInstance.data.datasets[0].data = projected;
+      chartInstance.update();
+    }
+
+    // LOCAL STORAGE / SAVE HISTORY
+    function getStoredValuations() {
+      return JSON.parse(localStorage.getItem('omni_saved_valuations') || '[]');
+    }
+
+    function saveCurrentValuation() {
+      if (!lastGeneratedValuation) return;
+      const list = getStoredValuations();
+      list.unshift(lastGeneratedValuation);
+      localStorage.setItem('omni_saved_valuations', JSON.stringify(list.slice(0, 15)));
+      updateSavedBadge();
+      renderSavedList();
+      alert('Valuation quote successfully saved to your history drawer.');
+    }
+
+    function updateSavedBadge() {
+      const list = getStoredValuations();
+      document.getElementById('savedCountBadge').textContent = list.length;
+    }
+
+    function toggleHistoryDrawer() {
+      const drawer = document.getElementById('historyDrawer');
+      drawer.classList.toggle('translate-x-full');
+      if (!drawer.classList.contains('translate-x-full')) {
+        renderSavedList();
+      }
+    }
+
+    function renderSavedList() {
+      const container = document.getElementById('savedListContainer');
+      const list = getStoredValuations();
+      if (!list.length) {
+        container.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">No valuations saved yet. Run a prediction and click "Save Quote".</div>`;
+        return;
+      }
+      container.innerHTML = list.map((item, idx) => `
+        <div class="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-white">${item.brand} ${item.model}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">${item.variant} • Grade: ${item.cosmeticGrade.toUpperCase()}</div>
+            <div class="text-[10px] text-indigo-400 mt-1">${new Date(item.date).toLocaleDateString()}</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sm font-extrabold text-emerald-400">${formatMoney(item.fairPrivatePrice)}</div>
+            <div class="text-[10px] text-slate-500">Trade-in: ${formatMoney(item.instantTradeIn)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function clearAllSaved() {
+      localStorage.removeItem('omni_saved_valuations');
+      updateSavedBadge();
+      renderSavedList();
+    }
+
+    function exportValuationJSON() {
+      if (!lastGeneratedValuation) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(lastGeneratedValuation, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `valuation_${lastGeneratedValuation.model.replace(/\s+/g, '_')}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function resetCalculator() {
+      document.getElementById('pricingForm').reset();
+      selectCategory('smartphone');
+      setCosmeticTier('flawless', document.querySelectorAll('.tier-btn')[0]);
+      updateBatteryVal(92);
+      runPrediction();
+    }
+  </script>
+</body>
+</html>
