@@ -1,0 +1,11 @@
+stages:
+  - lint
+  - build
+
+markdown_lint:
+  stage: lint
+  image: node:alpine
+  script:
+    - npm install -g markdownlint-cli
+    - markdownlint '**/*.md'
+  allow_failure: true
