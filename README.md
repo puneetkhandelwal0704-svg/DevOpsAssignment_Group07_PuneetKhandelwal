@@ -9,7 +9,7 @@ It demonstrates practical implementation of DevOps concepts including automation
 - **Rajeev Menaria**
 - **Rajneesh Kumavat**
 - **Pratyush Gautam**
-- **Naman**
+- **Naman Goyal**
 
 ## 🛠️ Tech Stack
 - **Version Control:** Git & GitHub  
